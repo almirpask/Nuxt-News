@@ -23,20 +23,22 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#9ccc65', height: '10px' },
 
   /*
   ** Global CSS
   */
   css: [
-    { src: 'vue-material/dist/vue-material.min.css', lang: 'css' }
+    { src: 'vue-material/dist/vue-material.min.css', lang: 'css' },
+    { src: '~/assets/theme.scss', lang: 'scss' },
   ],
 
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
-    {src: '~/plugins/vue-material'}
+    { src: '~/plugins/vue-material' },
+    { src: '~/plugins/axios' },
   ],
 
   /*
@@ -50,9 +52,12 @@ module.exports = {
   ** Axios module configuration
   */
   axios: {
-    // See https://github.com/nuxt-community/axios-module#options
+    credentials: true
   },
 
+  env: {
+    NEWS_API_KEY: "887aa6ed270e4246a1090f278c4b140b"
+  },
   /*
   ** Build configuration
   */
