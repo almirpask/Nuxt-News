@@ -1,5 +1,32 @@
 <template>
   <div class="md-layout alignment-center">
+    <md-toolbar class="fixed-toolbar" elevation="1">
+      <md-button class="md-icon-button">
+        <md-icon>menu</md-icon>
+      </md-button>
+      <nuxt-link class="md-primary md-title" to="/">
+        NuxtNews
+      </nuxt-link>
+      <div class="md-toolbar-section-end">
+        <nuxt-link class="md-button" to="/login">
+          <md-ripple>
+            <div class="md-button-content" style="color: white;">
+              Login
+            </div>
+          </md-ripple>
+        </nuxt-link>
+        <nuxt-link class="md-button" to="/register">
+          <md-ripple>
+            <div class="md-button-content" style="color: white;">
+              Register
+            </div>
+          </md-ripple>
+        </nuxt-link>
+        <!-- <md-button to="login">Login</md-button> -->
+        <!-- <md-button to="/login">Login</md-button> -->
+        <!-- <md-button to="/register">Register</md-button> -->
+      </div>
+    </md-toolbar>
     <div class="md-layout-tem md-size-95">
       <md-content class="md-layout md-gutter" style="background-color: #007998; padding: 1em;">
         <ul v-for="headline in headlines" :key="headline.id"
@@ -50,9 +77,13 @@
 
 <script>
 export default {
-  async asyncData({ app }){
-    const topHeadlines = await app.$axios.$get('/api/top-headlines?country=us')
-    return { headlines: topHeadlines.articles}
+  async fetch({ store }) {
+    await store.dispatch('loadHeadlines', '/api/top-headlines?country=us')
+  },
+  computed: {
+    headlines() {
+      return this.$store.getters.headlines;
+    }
   }
 }
 </script>
@@ -60,5 +91,10 @@ export default {
 <style scoped>
   .small-icon {
     font-size: 18px !important;
+  }
+  .fixed-toolbar {
+    position: fixed;
+    top: 0;
+    z-index: 5;
   }
 </style>
