@@ -6,6 +6,7 @@
     state: {
       headlines: [],
       category: '',
+      country: 'br',
       loading: false
     },
     actions: {
@@ -25,12 +26,16 @@
       },
       setLoading(state, loading) {
         state.loading = loading
+      },
+      setCountry(state, country) {
+        state.country = country
       }
     },
     getters: {
       headlines: state => state.headlines,
       category: state => state.category,
       loading: state => state.loading,
+      country: state => state.country,
     }
   });
  }

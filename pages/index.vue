@@ -1,7 +1,7 @@
 <template>
   <div class="md-layout alignment-center">
     <md-toolbar class="fixed-toolbar" elevation="1">
-      <md-button class="md-icon-button">
+      <md-button @click="showLefttSidepanel = true" class="md-icon-button">
         <md-icon>menu</md-icon>
       </md-button>
       <nuxt-link class="md-primary md-title" to="/">
@@ -43,6 +43,27 @@
         </md-list-item>
       </md-list>
     </md-drawer>
+
+    <md-drawer md-fixed :md-active.sync="showLefttSidepanel">
+      <md-toolbar md-elevation="1">
+        <span class="md-title">
+          Personal Feed
+        </span>
+      </md-toolbar>
+      <md-progress-bar v-if="loading" md-mode="indeterminate"></md-progress-bar>
+
+      <md-field>
+        <label for="country">Country</label>
+        <md-select :value="country" @input="changeCountry" name="country" id="country">
+          <md-option value="us">United State</md-option>
+          <md-option value="ca">Canada</md-option>
+          <md-option value="de">Germany</md-option>
+          <md-option value="ru">Russia</md-option>
+          <md-option value="br">Brasil</md-option>
+        </md-select>
+      </md-field>
+    </md-drawer>
+
     <div class="md-layout-tem md-size-95">
       <md-content class="md-layout md-gutter" style="background-color: #007998; padding: 1em;">
         <ul v-for="headline in headlines" :key="headline.id"
@@ -96,6 +117,7 @@ export default {
   data(){
     return {
       showRightSidepanel: false,
+      showLefttSidepanel: false,
       newsCategories: [
         { name: 'To Headlines', path: '', icon: 'today'},
         { name: 'Technology', path: 'technology', icon: 'keyboard'},
@@ -109,7 +131,12 @@ export default {
     }
   },
   async fetch({ store }) {
-    await store.dispatch('loadHeadlines', `/api/top-headlines?country=br&category=${store.state.category}`)
+    await store.dispatch('loadHeadlines', `/api/top-headlines?country=${store.state.country}&category=${store.state.category}`)
+  },
+  watch: {
+    async country() {
+      await this.$store.dispatch('loadHeadlines', `/api/top-headlines?country=${this.country}&category=${this.category}`)
+    }
   },
   computed: {
     headlines() {
@@ -120,12 +147,18 @@ export default {
     },
     loading() {
       return this.$store.getters.loading;
+    },
+    country() {
+      return this.$store.getters.country;
     }
   },
   methods: {
+    changeCountry(country){
+      this.$store.commit('setCountry', country)
+    },
     async loadCategory(category) {
       this.$store.commit('setCategory', category);
-      await this.$store.dispatch('loadHeadlines', `/api/top-headlines?country=br&category=${this.category}`)
+      await this.$store.dispatch('loadHeadlines', `/api/top-headlines?country=${this.country}&category=${this.category}`)
     }
   }
 }
